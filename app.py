@@ -58,7 +58,6 @@ def update_graph(selected_ticker_input):
         fig.update_xaxes(title_text='')
         fig.update_yaxes(title_text='')
 
-        # Adicione informações adicionais que você deseja exibir
         info_content = f""
 
         return fig, info_content

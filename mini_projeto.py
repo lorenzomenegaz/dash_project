@@ -43,8 +43,6 @@ app.layout = html.Div(
 
 def update_graph(selected_ticker_input):
 
-    global selected_ticker
-
     try:
         if selected_ticker_input is None:
             return go.Figure(), None, None
@@ -62,32 +60,28 @@ def update_graph(selected_ticker_input):
         ws = soup.select('.boxarticle-infos a')
 
         texto1 = ws[0].text.strip()
-        link1 = ws[1]['href'] if 'href' in ws[0].attrs else '#'
         texto2 = ws[1].text.strip()
         link2 = ws[1]['href'] if 'href' in ws[1].attrs else '#'
 
         texto3 = ws[2].text.strip()
-        link3 = ws[3]['href'] if 'href' in ws[2].attrs else '#'
         texto4 = ws[3].text.strip()
         link4 = ws[3]['href'] if 'href' in ws[3].attrs else '#'
 
         texto5 = ws[4].text.strip()
-        link5 = ws[5]['href'] if 'href' in ws[4].attrs else '#'
         texto6 = ws[5].text.strip()
         link6 = ws[5]['href'] if 'href' in ws[5].attrs else '#'
 
         titles = [
-            html.P(html.A(texto1, href=link1, target='_blank', style={'text-decoration': 'none', 'font-family': 'Lato', 'color': '#949daf', 'font-size': '18px'})),
+            html.P(html.A(texto1, href=link2, target='_blank', style={'text-decoration': 'none', 'font-family': 'Lato', 'color': '#949daf', 'font-size': '18px'})),
             html.P(html.A(texto2, href=link2, target='_blank', style={'text-decoration': 'none', 'font-family': 'Lato', 'color': 'black', 'font-size': '18px'})),
-            html.P(html.A(texto3, href=link3, target='_blank', style={'text-decoration': 'none', 'font-family': 'Lato', 'color': '#949daf', 'font-size': '18px'})),
+            html.P(html.A(texto3, href=link4, target='_blank', style={'text-decoration': 'none', 'font-family': 'Lato', 'color': '#949daf', 'font-size': '18px'})),
             html.P(html.A(texto4, href=link4, target='_blank', style={'text-decoration': 'none', 'font-family': 'Lato', 'color': 'black', 'font-size': '18px'})),
-            html.P(html.A(texto5, href=link5, target='_blank', style={'text-decoration': 'none', 'font-family': 'Lato', 'color': '#949daf', 'font-size': '18px'})),
+            html.P(html.A(texto5, href=link6, target='_blank', style={'text-decoration': 'none', 'font-family': 'Lato', 'color': '#949daf', 'font-size': '18px'})),
             html.P(html.A(texto6, href=link6, target='_blank', style={'text-decoration': 'none', 'font-family': 'Lato', 'color': 'black', 'font-size': '18px'}))
         ]
 
-        selected_ticker = selected_ticker_input
 
-        data = yf.download(selected_ticker, '2023-01-01', datetime.now())
+        data = yf.download(selected_ticker_input, '2023-01-01', datetime.now())
         
         df = pd.DataFrame(data, columns=['Open', 'High', 'Low', 'Close']).dropna()
 
@@ -111,4 +105,4 @@ def update_graph(selected_ticker_input):
         return go.Figure(), error_message, None
 
 if __name__ == '__main__':
-    app.run_server(debug=True)
+    app.run_server(debug=False, port=8000)

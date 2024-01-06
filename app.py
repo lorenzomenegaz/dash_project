@@ -7,33 +7,42 @@ from datetime import datetime
 import requests
 
 cotacoes = ['PETR4.SA', 'WEGE3.SA', 'CEAB3.SA']
+
 tickers_sem_suffix = [ticker.replace('.SA', '') for ticker in cotacoes]
 
 app = Dash(__name__)
 
-selected_ticker = None
-
 app.layout = html.Div(
+
     children=[
+        
         dcc.Dropdown(
             options=[{'label': cotacoes, 'value': ticker} for ticker, cotacoes in zip(cotacoes, tickers_sem_suffix)],
             value='PETR4.SA', id='dropdown', style={'width': '50%', 'margin': 'auto', 'marginTop': 0, 'font-family': 'Lato', 'background-color': 'white'}
         ),
-        dcc.Graph(id='graph-content', className='my-graph-style', style={'background-color': '#131516'}),
-        html.Div(id='info-content', className='my-info-style', style={'background-color': '#131516'}),
+
+        dcc.Graph(id='graph-content', className='grafico-acoes', style={'background-color': 'white'}),
+        html.Div(id='info-content', className='my-info-style', style={'background-color': 'white'}),
         html.H1('Notícias', style={'position': 'absolute', 'top': '-45px', 'left': '130%', 'font-size': '46px', 'background-color': 'white'}),
         html.Div(id='noticias-div', style={'position': 'absolute', 'top': '100px', 'width': '80%', 'margin': 'auto', 'left': '100%', 'font-family': 'Lato', 'background-color': 'white'})
+    
     ],
+
     style={'width': '50%', 'margin': 'auto', 'background-color': 'white', 'position': 'absolute', 'left': '0', 'top': '20%', 'height': '80vh', 'color': 'black', 'font-family': 'Lato'}
+
 )
 
 @app.callback(
+        
     [Output('graph-content', 'figure'),
      Output('info-content', 'children'),
      Output('noticias-div', 'children')],
     Input('dropdown', 'value')
+
 )
+
 def update_graph(selected_ticker_input):
+
     global selected_ticker
 
     try:
@@ -51,8 +60,6 @@ def update_graph(selected_ticker_input):
 
         soup = BeautifulSoup(response.text, 'html.parser')
         ws = soup.select('.boxarticle-infos a')
-        
-        titles = []
 
         texto1 = ws[0].text.strip()
         link1 = ws[1]['href'] if 'href' in ws[0].attrs else '#'
@@ -81,6 +88,7 @@ def update_graph(selected_ticker_input):
         selected_ticker = selected_ticker_input
 
         data = yf.download(selected_ticker, '2023-01-01', datetime.now())
+        
         df = pd.DataFrame(data, columns=['Open', 'High', 'Low', 'Close']).dropna()
 
         fig = go.Figure(data=[go.Candlestick(x=df.index,

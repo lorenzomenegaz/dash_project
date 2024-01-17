@@ -95,8 +95,6 @@ def update_graph(selected_ticker_input):
                                             )])
 
         fig.update_layout(xaxis_rangeslider_visible=False)
-        fig.update_xaxes(title_text='')
-        fig.update_yaxes(title_text='')
 
         return fig, None, titles
 
